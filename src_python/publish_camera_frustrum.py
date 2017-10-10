@@ -24,12 +24,6 @@ if __name__ == "__main__":
         print e
         exit(1)
 
-    #horizontal_fov = 1.047
-    #aspect_w_h = 1.33333
-    #min_z = 0.5
-    #max_z = 3.0
-    #frame_id = "head_kinect_rgb_optical_frame"
-
     pub = marker_publisher.MarkerPublisher('/camera_frustrum')
 
     while not rospy.is_shutdown():
