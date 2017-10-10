@@ -6,6 +6,8 @@ import rospy
 import math
 import copy
 
+import tf
+import tf2_ros
 from std_msgs.msg import ColorRGBA
 from interactive_markers.interactive_marker_server import *
 from interactive_markers.menu_handler import *
@@ -16,21 +18,45 @@ import tf_conversions.posemath as pm
 import PyKDL
 
 class PoseIntMarker:
-    def __init__(self):
+    def __init__(self, frame_id):
         # create an interactive marker server on the topic namespace simple_marker
-        self.server = InteractiveMarkerServer('pose_int_marker')
+        self.br = tf2_ros.TransformBroadcaster()
+        self.frame_id = frame_id
+        self.tf = Transform()
+        self.tf.translation.x = 1.0
+        self.tf.translation.y = 0.0
+        self.tf.translation.z = 1.5
+        self.tf.rotation.x = 0
+        self.tf.rotation.y = 0
+        self.tf.rotation.z = 0
+        self.tf.rotation.w = 1
 
+        self.server = InteractiveMarkerServer('pose_int_marker_' + self.frame_id)
         self.insert6DofGlobalMarker()
+        self.server.applyChanges()
 
-       
-        self.server.applyChanges();
+    def spin(self):
+        while not rospy.is_shutdown():
+            t = TransformStamped()
+            t.header.stamp = rospy.Time.now()
+            t.header.frame_id = "world"
+            t.child_frame_id = self.frame_id
+            t.transform = self.tf
+            self.br.sendTransform(t)
+            try:
+                rospy.sleep(0.1)
+            except:
+                break
 
     def insert6DofGlobalMarker(self):
         int_position_marker = InteractiveMarker()
         int_position_marker.header.frame_id = 'world'
-        int_position_marker.name = 'pose_int_marker'
+        int_position_marker.name = 'pose_int_marker_' + self.frame_id
         int_position_marker.scale = 0.2
-        int_position_marker.pose = pm.toMsg(PyKDL.Frame(PyKDL.Vector(1,0,1.5)))
+        int_position_marker.pose.position.x = self.tf.translation.x
+        int_position_marker.pose.position.y = self.tf.translation.y
+        int_position_marker.pose.position.z = self.tf.translation.z
+        int_position_marker.pose.orientation = self.tf.rotation
 
         int_position_marker.controls.append(self.createInteractiveMarkerControl6DOF(InteractiveMarkerControl.ROTATE_AXIS,'x'));
         int_position_marker.controls.append(self.createInteractiveMarkerControl6DOF(InteractiveMarkerControl.ROTATE_AXIS,'y'));
@@ -47,13 +73,12 @@ class PoseIntMarker:
         self.server.applyChanges();
 
     def processFeedback(self, feedback):
-        #print "feedback", feedback.marker_name, feedback.control_name, feedback.event_type
-
-        if ( feedback.marker_name == 'pose_int_marker' ):
-            T_W_M = pm.fromMsg(feedback.pose)
-            qx,qy,qz,qw = T_W_M.M.GetQuaternion()
-            #print "position:(", T_W_M.p.x(), ",", T_W_M.p.y(), ",", T_W_M.p.z(), ")  orientation: (", qx, ",", qy, ",", qz, ",", qw, ")"
-            print "PyKDL.Frame(PyKDL.Rotation.Quaternion(", qx, ",", qy, ",", qz, ",", qw, "), PyKDL.Vector(", T_W_M.p.x(), ",", T_W_M.p.y(), ",", T_W_M.p.z(), "))"
+        if ( feedback.marker_name == 'pose_int_marker_' + self.frame_id ):
+            self.tf.translation.x = feedback.pose.position.x
+            self.tf.translation.y = feedback.pose.position.y
+            self.tf.translation.z = feedback.pose.position.z
+            self.tf.rotation = feedback.pose.orientation
+            print "PyKDL.Frame(PyKDL.Rotation.Quaternion(", self.tf.rotation.x, ",", self.tf.rotation.y, ",", self.tf.rotation.z, ",", self.tf.rotation.w, "), PyKDL.Vector(", self.tf.translation.x, ",", self.tf.translation.y, ",", self.tf.translation.z, "))"
 
     def createAxisMarkerControl(self, scale, position):
         markerX = Marker()
@@ -119,9 +144,16 @@ if __name__ == "__main__":
 
     rospy.init_node('pose_int_marker', anonymous=True)
 
-    rospy.sleep(1)
+    rospy.sleep(0.5)
 
-    int_marker = PoseIntMarker()
+    try:
+        frame_id = rospy.get_param("~frame_id")
+    except KeyError as e:
+        print "Some ROS parameters are not provided:"
+        print e
+        exit(1)
 
-    rospy.spin()
+    int_marker = PoseIntMarker(frame_id)
+
+    int_marker.spin()
 
