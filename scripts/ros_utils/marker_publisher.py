@@ -1,4 +1,6 @@
-#!/usr/bin/env python
+"""
+This file contains class for publishing ROS markers.
+"""
 
 # Copyright (c) 2015, Robot Control and Pattern Recognition Group,
 # Institute of Control and Computation Engineering
@@ -32,23 +34,21 @@
 #
 
 import rospy
-#import tf
 
 from std_msgs.msg import *
 from sensor_msgs.msg import *
 from geometry_msgs.msg import *
 from visualization_msgs.msg import *
 
-#from tf import *
-#from tf.transformations import * 
-#from tf2_msgs.msg import *
-
 import PyKDL
 import copy
 
 class MarkerPublisher:
+    """!
+    This class is an interface to ROS markers publisher.
+    """
     def __init__(self, namespace):
-        self.pub_marker = rospy.Publisher(namespace, MarkerArray, queue_size=1000)
+        self._pub_marker = rospy.Publisher(namespace, MarkerArray, queue_size=1000)
 
     def publishSinglePointMarker(self, pt, i, r=1, g=0, b=0, a=1, namespace='default', frame_id='torso_base', m_type=Marker.CUBE, scale=Vector3(0.005, 0.005, 0.005), T=None):
         m = MarkerArray()
@@ -68,7 +68,7 @@ class MarkerPublisher:
         marker.scale = scale
         marker.color = ColorRGBA(r,g,b,a)
         m.markers.append(marker)
-        self.pub_marker.publish(m)
+        self._pub_marker.publish(m)
         return i+1
 
     def eraseMarkers(self, idx_from, idx_to, frame_id='torso_base', namespace='default'):
@@ -82,7 +82,7 @@ class MarkerPublisher:
             marker.action = Marker.DELETE
             m.markers.append(marker)
         if len(m.markers) > 0:
-            self.pub_marker.publish(m)
+            self._pub_marker.publish(m)
 
 
     def publishMultiPointsMarker(self, pt, base_id, r=1, g=0, b=0, namespace='default', frame_id='torso_base', m_type=Marker.CUBE, scale=Vector3(0.002, 0.002, 0.002), T=None):
@@ -105,7 +105,7 @@ class MarkerPublisher:
             marker.scale = scale
             marker.color = ColorRGBA(r,g,b,0.5)
             m.markers.append(marker)
-        self.pub_marker.publish(m)
+        self._pub_marker.publish(m)
         return ret_id
 
     def publishMultiPointsMarkerWithSize(self, pt, base_id, r=1, g=0, b=0, namespace='default', frame_id='torso_base', m_type=Marker.SPHERE, T=None):
@@ -127,7 +127,7 @@ class MarkerPublisher:
             marker.scale = Vector3(pt[i][1], pt[i][1], pt[i][1])
             marker.color = ColorRGBA(r,g,b,0.5)
             m.markers.append(marker)
-        self.pub_marker.publish(m)
+        self._pub_marker.publish(m)
         return ret_id
 
     def publishVectorMarker(self, v1, v2, i, r, g, b, frame='torso_base', namespace='default', scale=0.001):
@@ -145,7 +145,7 @@ class MarkerPublisher:
         marker.scale = Vector3(scale, 2.0*scale, 0)
         marker.color = ColorRGBA(r,g,b,0.5)
         m.markers.append(marker)
-        self.pub_marker.publish(m)
+        self._pub_marker.publish(m)
         return i+1
 
     def publishFrameMarker(self, T, base_id, scale=0.1, frame='torso_base', namespace='default'):
@@ -172,7 +172,7 @@ class MarkerPublisher:
         marker.scale = Vector3(scale, scale, scale)
         marker.color = ColorRGBA(r,g,b,0.5)
         m.markers.append(marker)
-        self.pub_marker.publish(m)
+        self._pub_marker.publish(m)
         return base_id+1
 
     def publishMeshMarker(self, mesh, base_id, r=1, g=0, b=0, scale=0.1, frame_id='torso_base', namespace='default', T=None):
@@ -197,6 +197,6 @@ class MarkerPublisher:
         marker.scale = Vector3(1.0, 1.0, 1.0)
         marker.color = ColorRGBA(r,g,b,0.5)
         m.markers.append(marker)
-        self.pub_marker.publish(m)
+        self._pub_marker.publish(m)
         return base_id+1
 

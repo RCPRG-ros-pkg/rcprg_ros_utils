@@ -1,4 +1,6 @@
-#!/usr/bin/env python
+"""
+This file contains utility functions for various Python robotic applications.
+"""
 
 # Copyright (c) 2015, Robot Control and Pattern Recognition Group,
 # Institute of Control and Computation Engineering
@@ -35,5 +37,11 @@ import math
 import PyKDL
 
 def getAngle(v1, v2):
+    """!
+    Calculate angle between two vectors.
+    @param v1   PyKDL.Vector: first vector
+    @param v2   PyKDL.Vector: second vector
+    @return float: angle between two vectors
+    """
     return math.atan2((v1*v2).Norm(), PyKDL.dot(v1,v2))
 
