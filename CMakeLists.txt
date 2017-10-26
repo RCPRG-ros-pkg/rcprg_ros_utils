@@ -39,7 +39,7 @@ install(DIRECTORY include/${PROJECT_NAME}/
 )
 
 catkin_install_python(PROGRAMS
-    src_python/pose_int_marker.py
-    src_python/publish_camera_frustrum.py
+    scripts/pose_int_marker.py
+    scripts/publish_camera_frustrum.py
 DESTINATION ${CATKIN_PACKAGE_BIN_DESTINATION})
 

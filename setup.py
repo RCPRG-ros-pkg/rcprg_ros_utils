@@ -4,8 +4,8 @@ from distutils.core import setup
 from catkin_pkg.python_setup import generate_distutils_setup
 
 d = generate_distutils_setup(
-    packages=['ros_utils'],
-    package_dir={'':'scripts'}
+    packages=['rcprg_ros_utils'],
+    package_dir={'':'src'}
 )
 
 setup(**d)

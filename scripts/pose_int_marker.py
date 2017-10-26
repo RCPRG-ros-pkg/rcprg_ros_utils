@@ -1,4 +1,10 @@
 #!/usr/bin/env python
+
+## Provides interactive 6D pose marker and publishes its tf.
+# @ingroup utilities
+# @file pose_int_marker.py
+# @namespace scripts.pose_int_marker Provides interactive 6D pose marker and publishes its tf
+
 import roslib; roslib.load_manifest('rcprg_ros_utils')
 
 import sys

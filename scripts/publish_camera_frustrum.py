@@ -1,11 +1,17 @@
 #!/usr/bin/env python
-import roslib; roslib.load_manifest('velma_task_cs_ros_interface')
+
+## Publishes marker: camera frustrum.
+# @ingroup utilities
+# @file publish_camera_frustrum.py
+# @namespace scripts.publish_camera_frustrum Publishes marker: camera frustrum
+
+import roslib; roslib.load_manifest('rcprg_ros_utils')
 
 import rospy
 import math
 import PyKDL
 
-from ros_utils import marker_publisher
+from rcprg_ros_utils import marker_publisher
 
 if __name__ == "__main__":
 
