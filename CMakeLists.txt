@@ -38,6 +38,10 @@ install(DIRECTORY include/${PROJECT_NAME}/
   DESTINATION ${CATKIN_PACKAGE_INCLUDE_DESTINATION}
 )
 
+install(DIRECTORY launch/
+  DESTINATION ${CATKIN_PACKAGE_SHARE_DESTINATION}/launch
+  )
+
 catkin_install_python(PROGRAMS
     scripts/pose_int_marker.py
     scripts/publish_camera_frustrum.py
