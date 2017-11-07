@@ -44,6 +44,6 @@ install(DIRECTORY launch/
 
 catkin_install_python(PROGRAMS
     scripts/pose_int_marker.py
-    scripts/publish_camera_frustrum.py
+    scripts/publish_camera_frustum.py
 DESTINATION ${CATKIN_PACKAGE_BIN_DESTINATION})
 

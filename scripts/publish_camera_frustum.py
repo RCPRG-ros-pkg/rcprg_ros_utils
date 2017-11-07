@@ -1,14 +1,9 @@
 #!/usr/bin/env python
 
-## Publishes marker: camera frustrum.
+## Publishes marker: camera frustum.
 # @ingroup utilities
-# @file publish_camera_frustrum.py
-# @namespace scripts.publish_camera_frustrum Publishes marker: camera frustrum
-
-## Provides interactive 6D pose marker and allows moving object in Gazebo.
-# @ingroup utilities
-# @file gazebo_move_object.py
-# @namespace scripts.gazebo_move_object Provides interactive 6D pose marker and allows moving object in Gazebo
+# @file publish_camera_frustum.py
+# @namespace scripts.publish_camera_frustum Publishes marker: camera frustum
 
 # Copyright (c) 2017, Robot Control and Pattern Recognition Group,
 # Institute of Control and Computation Engineering
@@ -51,7 +46,7 @@ from rcprg_ros_utils import marker_publisher
 
 if __name__ == "__main__":
 
-    rospy.init_node('publish_camera_frustrum', anonymous=True)
+    rospy.init_node('publish_camera_frustum', anonymous=True)
 
     rospy.sleep(0.5)
 
@@ -66,7 +61,7 @@ if __name__ == "__main__":
         print e
         exit(1)
 
-    pub = marker_publisher.MarkerPublisher('/camera_frustrum')
+    pub = marker_publisher.MarkerPublisher('/camera_frustum')
 
     while not rospy.is_shutdown():
         dx = math.tan(horizontal_fov/2)

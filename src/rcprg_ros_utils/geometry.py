@@ -1,5 +1,6 @@
 ## This file contains utility functions for various Python robotic applications.
 # @file geometry.py
+# @ingroup python_api
 
 # Copyright (c) 2015, Robot Control and Pattern Recognition Group,
 # Institute of Control and Computation Engineering

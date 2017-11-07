@@ -1,5 +1,6 @@
 ## This file contains class for publishing ROS markers.
 # @file marker_publisher.py
+# @ingroup python_api
 
 # Copyright (c) 2015, Robot Control and Pattern Recognition Group,
 # Institute of Control and Computation Engineering
