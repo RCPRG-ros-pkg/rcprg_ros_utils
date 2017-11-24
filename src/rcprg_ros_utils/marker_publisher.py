@@ -130,7 +130,28 @@ class MarkerPublisher:
         self._pub_marker.publish(m)
         return ret_id
 
-    def publishVectorMarker(self, v1, v2, i, r, g, b, frame='torso_base', namespace='default', scale=0.001):
+    def publishTriangleListMarker(self, points_list, base_id, r=1, g=0, b=0, a=1.0, namespace='default', frame_id='torso_base', T=None):
+        m = MarkerArray()
+        marker = Marker()
+        marker.header.frame_id = frame_id
+        marker.header.stamp = rospy.Time.now()
+        marker.ns = namespace
+        marker.id = base_id
+        marker.type = Marker.TRIANGLE_LIST
+        marker.action = Marker.ADD
+        marker.scale = Vector3(1,1,1)
+        marker.color = ColorRGBA(r,g,b,a)
+        if T == None:
+            T = PyKDL.Frame()
+        q = T.M.GetQuaternion()
+        marker.pose = Pose( Point(T.p.x(),T.p.y(),T.p.z()), Quaternion(q[0],q[1],q[2],q[3]) )
+        for pt in points_list:
+            marker.points.append(Point(pt.x(), pt.y(), pt.z()))
+        m.markers.append(marker)
+        self._pub_marker.publish(m)
+        return base_id + 1
+
+    def publishVectorMarker(self, v1, v2, i, r, g, b, a=0.5, frame='torso_base', namespace='default', scale=0.001):
         m = MarkerArray()
         marker = Marker()
         marker.header.frame_id = frame
@@ -143,7 +164,7 @@ class MarkerPublisher:
         marker.points.append(Point(v2.x(), v2.y(), v2.z()))
         marker.pose = Pose( Point(0,0,0), Quaternion(0,0,0,1) )
         marker.scale = Vector3(scale, 2.0*scale, 0)
-        marker.color = ColorRGBA(r,g,b,0.5)
+        marker.color = ColorRGBA(r,g,b,a)
         m.markers.append(marker)
         self._pub_marker.publish(m)
         return i+1
