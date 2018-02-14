@@ -84,27 +84,55 @@ class MarkerPublisher:
         if len(m.markers) > 0:
             self._pub_marker.publish(m)
 
+# the old implementation is very slow:
+#    def publishMultiPointsMarker(self, pt, base_id, r=1, g=0, b=0, namespace='default', frame_id='torso_base', m_type=Marker.CUBE, scale=Vector3(0.002, 0.002, 0.002), T=None):
+#        m = MarkerArray()
+#        ret_id = copy.copy(base_id)
+#        for i in range(0, len(pt)):
+#            marker = Marker()
+#            marker.header.frame_id = frame_id
+#            marker.header.stamp = rospy.Time.now()
+#            marker.ns = namespace
+#            marker.id = ret_id
+#            ret_id += 1
+#            marker.type = m_type
+#            marker.action = Marker.ADD
+#            if T != None:
+#                point = T*pt[i]
+#                marker.pose = Pose( Point(point.x(),point.y(),point.z()), Quaternion(0,0,0,1) )
+#            else:
+#                marker.pose = Pose( Point(pt[i].x(),pt[i].y(),pt[i].z()), Quaternion(0,0,0,1) )
+#            marker.scale = scale
+#            marker.color = ColorRGBA(r,g,b,0.5)
+#            m.markers.append(marker)
+#        self._pub_marker.publish(m)
+#        return ret_id
 
-    def publishMultiPointsMarker(self, pt, base_id, r=1, g=0, b=0, namespace='default', frame_id='torso_base', m_type=Marker.CUBE, scale=Vector3(0.002, 0.002, 0.002), T=None):
+    def publishMultiPointsMarker(self, pt, base_id, r=1, g=0, b=0, a=1, namespace='default', frame_id='torso_base', m_type=Marker.CUBE, scale=Vector3(0.002, 0.002, 0.002), T=None):
         m = MarkerArray()
         ret_id = copy.copy(base_id)
-        for i in range(0, len(pt)):
-            marker = Marker()
-            marker.header.frame_id = frame_id
-            marker.header.stamp = rospy.Time.now()
-            marker.ns = namespace
-            marker.id = ret_id
-            ret_id += 1
-            marker.type = m_type
-            marker.action = Marker.ADD
-            if T != None:
-                point = T*pt[i]
-                marker.pose = Pose( Point(point.x(),point.y(),point.z()), Quaternion(0,0,0,1) )
-            else:
-                marker.pose = Pose( Point(pt[i].x(),pt[i].y(),pt[i].z()), Quaternion(0,0,0,1) )
-            marker.scale = scale
-            marker.color = ColorRGBA(r,g,b,0.5)
-            m.markers.append(marker)
+
+        marker = Marker()
+        marker.header.frame_id = frame_id
+        marker.header.stamp = rospy.Time.now()
+        marker.ns = namespace
+        marker.id = ret_id
+        ret_id += 1
+        if m_type == Marker.CUBE:
+            marker.type = Marker.CUBE_LIST
+        elif m_type == Marker.SPHERE:
+            marker.type = Marker.SPHERE_LIST
+        marker.action = Marker.ADD
+        if T != None:
+            qx, qy, qz, qw = T.M.GetQuaternion()
+            marker.pose = Pose( Point(T.p.x(),T.p.y(),T.p.z()), Quaternion(qx,qy,qz,qw) )
+        marker.scale = scale
+        marker.color = ColorRGBA(r,g,b,a)
+
+        for p in pt:
+            marker.points.append( Point(p.x(), p.y(), p.z()) )
+
+        m.markers.append(marker)
         self._pub_marker.publish(m)
         return ret_id
 
