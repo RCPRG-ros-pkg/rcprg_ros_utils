@@ -47,7 +47,7 @@ catkin_install_python(PROGRAMS
     scripts/publish_camera_frustum.py
     scripts/run_rviz.sh
     scripts/publish_joints_visualization.py
-    scripts/publish_manipulation_capability.py
+    scripts/reachability_range
     DESTINATION ${CATKIN_PACKAGE_BIN_DESTINATION})
 
 
