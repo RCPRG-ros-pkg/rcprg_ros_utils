@@ -46,5 +46,8 @@ catkin_install_python(PROGRAMS
     scripts/pose_int_marker.py
     scripts/publish_camera_frustum.py
     scripts/run_rviz.sh
-DESTINATION ${CATKIN_PACKAGE_BIN_DESTINATION})
+    scripts/publish_joints_visualization.py
+    scripts/publish_manipulation_capability.py
+    DESTINATION ${CATKIN_PACKAGE_BIN_DESTINATION})
+
 

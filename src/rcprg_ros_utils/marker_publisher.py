@@ -108,6 +108,56 @@ class MarkerPublisher:
 #        self._pub_marker.publish(m)
 #        return ret_id
 
+    def publishLineStripMarker(self, pt, base_id, r=1, g=0, b=0, a=1, namespace='default', frame_id='torso_base', width=0.01, T=None):
+        m = MarkerArray()
+        ret_id = copy.copy(base_id)
+
+        marker = Marker()
+        marker.header.frame_id = frame_id
+        marker.header.stamp = rospy.Time.now()
+        marker.ns = namespace
+        marker.id = ret_id
+        ret_id += 1
+        marker.type = Marker.LINE_STRIP
+        marker.action = Marker.ADD
+        if T != None:
+            qx, qy, qz, qw = T.M.GetQuaternion()
+            marker.pose = Pose( Point(T.p.x(),T.p.y(),T.p.z()), Quaternion(qx,qy,qz,qw) )
+        marker.scale.x = width
+        marker.color = ColorRGBA(r,g,b,a)
+
+        for p in pt:
+            marker.points.append( Point(p.x(), p.y(), p.z()) )
+
+        m.markers.append(marker)
+        self._pub_marker.publish(m)
+        return ret_id
+
+    def publishLineListMarker(self, pt, base_id, r=1, g=0, b=0, a=1, namespace='default', frame_id='torso_base', width=0.01, T=None):
+        m = MarkerArray()
+        ret_id = copy.copy(base_id)
+
+        marker = Marker()
+        marker.header.frame_id = frame_id
+        marker.header.stamp = rospy.Time.now()
+        marker.ns = namespace
+        marker.id = ret_id
+        ret_id += 1
+        marker.type = Marker.LINE_LIST
+        marker.action = Marker.ADD
+        if T != None:
+            qx, qy, qz, qw = T.M.GetQuaternion()
+            marker.pose = Pose( Point(T.p.x(),T.p.y(),T.p.z()), Quaternion(qx,qy,qz,qw) )
+        marker.scale.x = width
+        marker.color = ColorRGBA(r,g,b,a)
+
+        for p in pt:
+            marker.points.append( Point(p.x(), p.y(), p.z()) )
+
+        m.markers.append(marker)
+        self._pub_marker.publish(m)
+        return ret_id
+
     def publishMultiPointsMarker(self, pt, base_id, r=1, g=0, b=0, a=1, namespace='default', frame_id='torso_base', m_type=Marker.CUBE, scale=Vector3(0.002, 0.002, 0.002), T=None):
         m = MarkerArray()
         ret_id = copy.copy(base_id)
