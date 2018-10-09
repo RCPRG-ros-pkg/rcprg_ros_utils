@@ -43,10 +43,10 @@ install(DIRECTORY launch/
   )
 
 catkin_install_python(PROGRAMS
-    scripts/pose_int_marker.py
-    scripts/publish_camera_frustum.py
+    scripts/pose_int_marker
+    scripts/publish_camera_frustum
     scripts/run_rviz.sh
-    scripts/publish_joints_visualization.py
+    scripts/publish_joints_visualization
     scripts/reachability_range
     DESTINATION ${CATKIN_PACKAGE_BIN_DESTINATION})
 

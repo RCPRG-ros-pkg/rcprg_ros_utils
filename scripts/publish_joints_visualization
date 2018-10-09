@@ -1,9 +1,9 @@
 #!/usr/bin/env python
 
-## Publishes marker: camera frustum.
+## Publishes marker: joints visualization
 # @ingroup utilities
-# @file publish_camera_frustum.py
-# @namespace scripts.publish_camera_frustum Publishes marker: camera frustum
+# @file publish_joints_visualization
+# @namespace scripts.publish_joints_visualization Publishes marker: camera frustum
 
 # Copyright (c) 2017, Robot Control and Pattern Recognition Group,
 # Institute of Control and Computation Engineering
@@ -175,6 +175,7 @@ if __name__ == "__main__":
                 rot = j[6]
                 vec = rot*PyKDL.Vector(math.cos(js[j[0]]), math.sin(js[j[0]]),0)            
                 m_id = pub.publishVectorMarker(j[2]*PyKDL.Vector(), j[2]*(vec*0.15), m_id, 0, 0, 1, a=1.0, namespace="limits", frame=j[1], scale=0.01)
+            m_id = pub.publishTextMarker(j[0], m_id, 0,0,1,1, namespace='names', frame_id=j[1], T=j[2], height=0.05)
         try:
             rospy.sleep(0.1)
         except:

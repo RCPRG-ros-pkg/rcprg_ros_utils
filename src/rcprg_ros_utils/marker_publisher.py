@@ -50,6 +50,28 @@ class MarkerPublisher:
     def __init__(self, namespace):
         self._pub_marker = rospy.Publisher(namespace, MarkerArray, queue_size=1000)
 
+    def publishTextMarker(self, text, i, r=1, g=0, b=0, a=1, namespace='default', frame_id='torso_base', T=None, height=0.1):
+        m = MarkerArray()
+        marker = Marker()
+        marker.header.frame_id = frame_id
+        marker.header.stamp = rospy.Time.now()
+        marker.ns = namespace
+        marker.id = i
+        marker.type = Marker.TEXT_VIEW_FACING
+        marker.text = text
+        marker.action = Marker.ADD
+        if T != None:
+            point = T.p
+            q = T.M.GetQuaternion()
+            marker.pose = Pose( Point(point.x(),point.y(),point.z()), Quaternion(q[0],q[1],q[2],q[3]) )
+        #else:
+        #    marker.pose = Pose( Point(pt.x(),pt.y(),pt.z()), Quaternion(0,0,0,1) )
+        marker.scale.z = height
+        marker.color = ColorRGBA(r,g,b,a)
+        m.markers.append(marker)
+        self._pub_marker.publish(m)
+        return i+1
+
     def publishSinglePointMarker(self, pt, i, r=1, g=0, b=0, a=1, namespace='default', frame_id='torso_base', m_type=Marker.CUBE, scale=Vector3(0.005, 0.005, 0.005), T=None):
         m = MarkerArray()
         marker = Marker()
