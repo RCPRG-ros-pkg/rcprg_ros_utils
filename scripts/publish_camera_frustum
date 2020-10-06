@@ -50,22 +50,22 @@ if __name__ == "__main__":
 
     rospy.sleep(0.5)
 
-    try:
-        horizontal_fov = float(rospy.get_param("~horizontal_fov"))
-        aspect_w_h = float(rospy.get_param("~aspect_w_h"))
-        min_z = float(rospy.get_param("~min_z"))
-        max_z = float(rospy.get_param("~max_z"))
-        frame_id = rospy.get_param("~frame_id")
-    except KeyError as e:
-        print "Some ROS parameters are not provided:"
-        print e
-        exit(1)
+    ros_parameter_names = [('horizontal_fov', float), ('aspect_w_h', float),
+        ('min_z', float), ('max_z', float), ('frame_id', str)]
+
+    params = {}
+    for param_name, param_type in ros_parameter_names:
+        param_value_str = rospy.get_param('~{}'.format(param_name))
+        params[param_name] = (param_type)( param_value_str )
 
     pub = marker_publisher.MarkerPublisher('/camera_frustum')
 
+    dx = math.tan(params['horizontal_fov']/2)
+    dy = dx/params['aspect_w_h']
+    min_z = params['min_z']
+    max_z = params['max_z']
+    frame_id = params['frame_id']
     while not rospy.is_shutdown():
-        dx = math.tan(horizontal_fov/2)
-        dy = dx/aspect_w_h
         m_id = 0
         m_id = pub.publishVectorMarker(PyKDL.Vector(dx*min_z, dy*min_z, min_z), PyKDL.Vector(dx*max_z, dy*max_z, max_z), m_id, 1, 0, 0, frame=frame_id, namespace=frame_id, scale=0.01)
         m_id = pub.publishVectorMarker(PyKDL.Vector(-dx*min_z, dy*min_z, min_z), PyKDL.Vector(-dx*max_z, dy*max_z, max_z), m_id, 1, 0, 0, frame=frame_id, namespace=frame_id, scale=0.01)
@@ -85,5 +85,3 @@ if __name__ == "__main__":
             rospy.sleep(0.1)
         except:
             break
-
-

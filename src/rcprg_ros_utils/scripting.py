@@ -35,14 +35,19 @@
 
 import time
 
-def exitError(code):
+def exitError(code, msg=None):
     """!
     Exits the current script, prints error code and waits 0.5 second.
     """
     if code == 0:
-        print "OK"
+        if msg:
+            print('OK: {}'.format(msg))
+        else:
+            print('OK')
     else:
-        print "ERROR:", code
+        if msg:
+            print('ERROR {}: {}'.format(code, msg))
+        else:
+            print('ERROR: {}'.format(code))
     time.sleep(0.5)
     exit(code)
-
