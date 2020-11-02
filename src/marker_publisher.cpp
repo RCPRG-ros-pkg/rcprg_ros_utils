@@ -34,10 +34,11 @@
 #include "geometry_msgs/Point.h"
 
 
-MarkerPublisher::MarkerPublisher(ros::NodeHandle &nh) :
-    nh_(nh)
+MarkerPublisher::MarkerPublisher(ros::NodeHandle &nh, const std::string& topic_name)
+: nh_(nh)
+, default_namesp_("default")
 {
-    pub_ = nh_.advertise<visualization_msgs::MarkerArray>("/velma_markers", 1000);
+    pub_ = nh_.advertise<visualization_msgs::MarkerArray>(topic_name, 1000, false);
 }
 
 MarkerPublisher::~MarkerPublisher() {
@@ -51,22 +52,19 @@ void MarkerPublisher::publish() {
 void MarkerPublisher::clear() {
     marker_array_.markers.clear();
 }
-/*
-int MarkerPublisher::addMarkerArray(int m_id, const visualization_msgs::MarkerArray &ma, const std::string &frame_id) {
 
-    for (int i=0; i<ma.markers.size(); i++) {
-        marker_array_.markers.push_back( ma.markers[i] );
-        marker_array_.markers.back();
-    }
-
-}
-*/
-
-int MarkerPublisher::addLineListMarker(int m_id, const std::vector<KDL::Vector > &pts, const KDL::Frame &fr, double r, double g, double b, double a, double size, const std::string &frame_id) {
+int MarkerPublisher::addLineListMarker(int m_id, const std::vector<KDL::Vector > &pts,
+        const KDL::Frame &fr, double r, double g, double b, double a, double size,
+        const std::string &frame_id, const std::string& namesp) {
     visualization_msgs::Marker marker;
     marker.header.frame_id = frame_id;
     marker.header.stamp = ros::Time();
-    marker.ns = "default";
+    if (namesp.empty()) {
+      marker.ns = default_namesp_;
+    }
+    else {
+      marker.ns = namesp;
+    }
     marker.id = m_id;
     marker.type = visualization_msgs::Marker::LINE_LIST;
     marker.action = visualization_msgs::Marker::ADD;
@@ -101,11 +99,18 @@ int MarkerPublisher::addLineListMarker(int m_id, const std::vector<KDL::Vector >
     return m_id + 1;
 }
 
-int MarkerPublisher::addSinglePointMarker(int m_id, const KDL::Vector &pos, double r, double g, double b, double a, double size, const std::string &frame_id) {
+int MarkerPublisher::addSinglePointMarker(int m_id, const KDL::Vector &pos, double r, double g,
+        double b, double a, double size, const std::string &frame_id,
+        const std::string& namesp) {
     visualization_msgs::Marker marker;
     marker.header.frame_id = frame_id;
     marker.header.stamp = ros::Time();
-    marker.ns = "default";
+    if (namesp.empty()) {
+      marker.ns = default_namesp_;
+    }
+    else {
+      marker.ns = namesp;
+    }
     marker.id = m_id;
     marker.type = visualization_msgs::Marker::SPHERE;
     marker.action = visualization_msgs::Marker::ADD;
@@ -127,11 +132,18 @@ int MarkerPublisher::addSinglePointMarker(int m_id, const KDL::Vector &pos, doub
     return m_id + 1;
 }
 
-int MarkerPublisher::addSphereListMarker(int m_id, const std::vector<KDL::Vector > &pos, double r, double g, double b, double a, double size, const std::string &frame_id) {
+int MarkerPublisher::addSphereListMarker(int m_id, const std::vector<KDL::Vector > &pos, double r,
+        double g, double b, double a, double size, const std::string &frame_id,
+        const std::string& namesp) {
     visualization_msgs::Marker marker;
     marker.header.frame_id = frame_id;
     marker.header.stamp = ros::Time();
-    marker.ns = "default";
+    if (namesp.empty()) {
+      marker.ns = default_namesp_;
+    }
+    else {
+      marker.ns = namesp;
+    }
     marker.id = m_id;
     marker.type = visualization_msgs::Marker::SPHERE_LIST;
     marker.action = visualization_msgs::Marker::ADD;
@@ -159,11 +171,18 @@ int MarkerPublisher::addSphereListMarker(int m_id, const std::vector<KDL::Vector
     return m_id + 1;
 }
 
-int MarkerPublisher::addSinglePointMarkerCube(int m_id, const KDL::Vector &pos, double r, double g, double b, double a, double size_x, double size_y, double size_z, const std::string &frame_id) {
+int MarkerPublisher::addSinglePointMarkerCube(int m_id, const KDL::Vector &pos, double r, double g,
+        double b, double a, double size_x, double size_y, double size_z,
+        const std::string &frame_id, const std::string& namesp) {
     visualization_msgs::Marker marker;
     marker.header.frame_id = frame_id;
     marker.header.stamp = ros::Time();
-    marker.ns = "default";
+    if (namesp.empty()) {
+      marker.ns = default_namesp_;
+    }
+    else {
+      marker.ns = namesp;
+    }
     marker.id = m_id;
     marker.type = visualization_msgs::Marker::CUBE;
     marker.action = visualization_msgs::Marker::ADD;
@@ -185,11 +204,18 @@ int MarkerPublisher::addSinglePointMarkerCube(int m_id, const KDL::Vector &pos, 
     return m_id + 1;
 }
 
-int MarkerPublisher::addMeshMarker(int m_id, const KDL::Vector &pos, double r, double g, double b, double a, double size_x, double size_y, double size_z, const std::string &mesh_path, const std::string &frame_id) {
+int MarkerPublisher::addMeshMarker(int m_id, const KDL::Vector &pos, double r, double g, double b,
+        double a, double size_x, double size_y, double size_z, const std::string &mesh_path,
+        const std::string &frame_id, const std::string& namesp) {
     visualization_msgs::Marker marker;
     marker.header.frame_id = frame_id;
     marker.header.stamp = ros::Time();
-    marker.ns = "default";
+    if (namesp.empty()) {
+      marker.ns = default_namesp_;
+    }
+    else {
+      marker.ns = namesp;
+    }
     marker.id = m_id;
     marker.type = visualization_msgs::Marker::MESH_RESOURCE;
     marker.action = visualization_msgs::Marker::ADD;
@@ -212,11 +238,18 @@ int MarkerPublisher::addMeshMarker(int m_id, const KDL::Vector &pos, double r, d
     return m_id + 1;
 }
 
-int MarkerPublisher::addVectorMarker(int m_id, const KDL::Vector &v1, const KDL::Vector &v2, double r, double g, double b, double a, double size, const std::string &frame_id) {
+int MarkerPublisher::addVectorMarker(int m_id, const KDL::Vector &v1, const KDL::Vector &v2,
+        double r, double g, double b, double a, double size, const std::string &frame_id,
+        const std::string& namesp) {
     visualization_msgs::Marker marker;
     marker.header.frame_id = frame_id;
     marker.header.stamp = ros::Time();
-    marker.ns = "default";
+    if (namesp.empty()) {
+      marker.ns = default_namesp_;
+    }
+    else {
+      marker.ns = namesp;
+    }
     marker.id = m_id;
     marker.type = visualization_msgs::Marker::ARROW;
     marker.action = visualization_msgs::Marker::ADD;
@@ -247,7 +280,9 @@ int MarkerPublisher::addVectorMarker(int m_id, const KDL::Vector &v1, const KDL:
     return m_id + 1;
 }
 
-int MarkerPublisher::addCapsule(int m_id, const KDL::Frame &fr, double r, double g, double b, double a, double length, double radius, const std::string &frame_id) {
+int MarkerPublisher::addCapsule(int m_id, const KDL::Frame &fr, double r, double g, double b,
+      double a, double length, double radius, const std::string &frame_id,
+      const std::string& namesp) {
 
 	KDL::Vector zero;
 	KDL::Vector v(0,0,length);
@@ -256,7 +291,12 @@ int MarkerPublisher::addCapsule(int m_id, const KDL::Frame &fr, double r, double
 	visualization_msgs::Marker marker;
 	marker.header.frame_id = frame_id;
 	marker.header.stamp = ros::Time();
-	marker.ns = "default";
+    if (namesp.empty()) {
+      marker.ns = default_namesp_;
+    }
+    else {
+      marker.ns = namesp;
+    }
 	marker.id = m_id;
 	marker.type = visualization_msgs::Marker::SPHERE;
 	marker.action = visualization_msgs::Marker::ADD;
@@ -321,7 +361,8 @@ int MarkerPublisher::addCapsule(int m_id, const KDL::Frame &fr, double r, double
 	return m_id + 3;
 }
 
-int MarkerPublisher::addOctomap(int m_id, const octomap::OcTree &om, const std::string &frame_id) {
+int MarkerPublisher::addOctomap(int m_id, const octomap::OcTree &om, const std::string &frame_id,
+        const std::string& namesp) {
 //    visualization_msgs::MarkerArray occupiedNodesVis;
     // each array stores all cubes of a different size, one for each depth level:
     int base_idx = marker_array_.markers.size();
@@ -362,7 +403,12 @@ int MarkerPublisher::addOctomap(int m_id, const octomap::OcTree &om, const std::
 
     marker_array_.markers[i + base_idx].header.frame_id = frame_id;
     marker_array_.markers[i + base_idx].header.stamp = ros::Time();
-    marker_array_.markers[i + base_idx].ns = "default";
+    if (namesp.empty()) {
+      marker_array_.markers[i + base_idx].ns = default_namesp_;
+    }
+    else {
+      marker_array_.markers[i + base_idx].ns = namesp;
+    }
     marker_array_.markers[i + base_idx].id = m_id;
     marker_array_.markers[i + base_idx].type = visualization_msgs::Marker::CUBE_LIST;
     marker_array_.markers[i + base_idx].scale.x = size;
@@ -440,14 +486,19 @@ std_msgs::ColorRGBA MarkerPublisher::heightMapColor(double h) {
   return color;
 }
 
-void MarkerPublisher::addEraseMarkers(int from, int to)
+void MarkerPublisher::addEraseMarkers(int from, int to, const std::string& namesp)
 {
 	for (int i=from; i<to; i++)
 	{
 		visualization_msgs::Marker marker;
 		marker.header.frame_id = "world";
 		marker.header.stamp = ros::Time();
-		marker.ns = "default";
+    if (namesp.empty()) {
+      marker.ns = default_namesp_;
+    }
+    else {
+      marker.ns = namesp;
+    }
 		marker.id = i;
 		marker.type = visualization_msgs::Marker::SPHERE;
 		marker.action = visualization_msgs::Marker::DELETE;
@@ -455,3 +506,6 @@ void MarkerPublisher::addEraseMarkers(int from, int to)
 	}
 }
 
+uint32_t MarkerPublisher::getNumSubscribers() const {
+  return pub_.getNumSubscribers();
+}

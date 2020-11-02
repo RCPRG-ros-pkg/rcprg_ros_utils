@@ -39,27 +39,56 @@
 
 class MarkerPublisher {
 public:
-    MarkerPublisher(ros::NodeHandle &nh);
+    MarkerPublisher(ros::NodeHandle &nh, const std::string& topic_name="/velma_markers");
+
     ~MarkerPublisher();
 
     void publish();
+
     void clear();
 
-    int addLineListMarker(int m_id, const std::vector<KDL::Vector > &pts, const KDL::Frame &fr, double r, double g, double b, double a, double size, const std::string &frame_id);
-    int addSinglePointMarker(int m_id, const KDL::Vector &pos, double r, double g, double b, double a, double size, const std::string &frame_id);
-    int addSinglePointMarkerCube(int m_id, const KDL::Vector &pos, double r, double g, double b, double a, double size_x, double size_y, double size_z, const std::string &frame_id);
-    int addSphereListMarker(int m_id, const std::vector<KDL::Vector > &pos, double r, double g, double b, double a, double size, const std::string &frame_id);
-    int addMeshMarker(int m_id, const KDL::Vector &pos, double r, double g, double b, double a, double size_x, double size_y, double size_z, const std::string &mesh_path, const std::string &frame_id);
-    int addVectorMarker(int m_id, const KDL::Vector &v1, const KDL::Vector &v2, double r, double g, double b, double a, double size, const std::string &frame_id);
-    int addCapsule(int m_id, const KDL::Frame &fr, double r, double g, double b, double a, double length, double radius, const std::string &frame_id);
-    int addOctomap(int m_id, const octomap::OcTree &om, const std::string &frame_id);
+    int addLineListMarker(int m_id, const std::vector<KDL::Vector > &pts, const KDL::Frame &fr,
+            double r, double g, double b, double a, double size, const std::string& frame_id,
+            const std::string& namesp=std::string());
+
+    int addSinglePointMarker(int m_id, const KDL::Vector &pos, double r, double g, double b,
+            double a, double size, const std::string &frame_id,
+            const std::string& namesp=std::string());
+
+    int addSinglePointMarkerCube(int m_id, const KDL::Vector &pos, double r, double g, double b,
+            double a, double size_x, double size_y, double size_z, const std::string &frame_id,
+            const std::string& namesp=std::string());
+
+    int addSphereListMarker(int m_id, const std::vector<KDL::Vector > &pos, double r, double g,
+            double b, double a, double size, const std::string &frame_id,
+            const std::string& namesp=std::string());
+
+    int addMeshMarker(int m_id, const KDL::Vector &pos, double r, double g, double b, double a,
+            double size_x, double size_y, double size_z, const std::string &mesh_path,
+            const std::string& frame_id, const std::string& namesp=std::string());
+
+    int addVectorMarker(int m_id, const KDL::Vector &v1, const KDL::Vector &v2, double r, double g,
+            double b, double a, double size, const std::string& frame_id,
+            const std::string& namesp=std::string());
+
+    int addCapsule(int m_id, const KDL::Frame &fr, double r, double g, double b, double a,
+            double length, double radius, const std::string &frame_id,
+            const std::string& namesp=std::string());
+
+    int addOctomap(int m_id, const octomap::OcTree &om, const std::string &frame_id,
+            const std::string& namesp=std::string());
+
     std_msgs::ColorRGBA heightMapColor(double h);
-    void addEraseMarkers(int from, int to);
+
+    void addEraseMarkers(int from, int to, const std::string& namesp=std::string());
+
+    uint32_t getNumSubscribers() const;
 
 protected:
     ros::NodeHandle nh_;
     ros::Publisher pub_;
     visualization_msgs::MarkerArray marker_array_;
+    const std::string default_namesp_;
 };
 
 #endif	// MARKER_PUBLISHER_H
