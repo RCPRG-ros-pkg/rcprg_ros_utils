@@ -48,6 +48,7 @@ catkin_install_python(PROGRAMS
     scripts/run_rviz.sh
     scripts/publish_joints_visualization
     scripts/reachability_range
+    scripts/termtitle.py
     DESTINATION ${CATKIN_PACKAGE_BIN_DESTINATION})
 
 
