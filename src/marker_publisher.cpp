@@ -280,6 +280,14 @@ int MarkerPublisher::addVectorMarker(int m_id, const KDL::Vector &v1, const KDL:
     return m_id + 1;
 }
 
+int MarkerPublisher::addFrameMarker(const KDL::Frame& T, int m_id, double scale,
+    const std::string &frame_id, const std::string& ns) {
+  m_id = addVectorMarker(m_id, T.p, T*KDL::Vector(scale,0,0), 1, 0, 0, 1, scale*0.1, frame_id, ns);
+  m_id = addVectorMarker(m_id, T.p, T*KDL::Vector(0,scale,0), 0, 1, 0, 1, scale*0.1, frame_id, ns);
+  m_id = addVectorMarker(m_id, T.p, T*KDL::Vector(0,0,scale), 0, 0, 1, 1, scale*0.1, frame_id, ns);
+  return m_id;
+}
+
 int MarkerPublisher::addCapsule(int m_id, const KDL::Frame &fr, double r, double g, double b,
       double a, double length, double radius, const std::string &frame_id,
       const std::string& namesp) {

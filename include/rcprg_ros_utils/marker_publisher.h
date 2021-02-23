@@ -71,6 +71,9 @@ public:
             double b, double a, double size, const std::string& frame_id,
             const std::string& namesp=std::string());
 
+    int addFrameMarker(const KDL::Frame& T, int m_id, double scale,
+                                const std::string &frame_id, const std::string& ns=std::string());
+
     int addCapsule(int m_id, const KDL::Frame &fr, double r, double g, double b, double a,
             double length, double radius, const std::string &frame_id,
             const std::string& namesp=std::string());
