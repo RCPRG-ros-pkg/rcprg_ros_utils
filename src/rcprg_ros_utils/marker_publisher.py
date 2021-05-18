@@ -35,10 +35,10 @@
 
 import rospy
 
-from std_msgs.msg import *
-from sensor_msgs.msg import *
-from geometry_msgs.msg import *
-from visualization_msgs.msg import *
+from std_msgs.msg import ColorRGBA
+#from sensor_msgs.msg import *
+from geometry_msgs.msg import Vector3, Pose, Point, Quaternion
+from visualization_msgs.msg import Marker, MarkerArray
 
 import PyKDL
 import copy
@@ -49,6 +49,13 @@ class MarkerPublisher:
     """
     def __init__(self, namespace):
         self._pub_marker = rospy.Publisher(namespace, MarkerArray, queue_size=1000)
+        self.__pending_markers = []
+
+    def publishAll(self):
+        m = MarkerArray()
+        m.markers  = self.__pending_markers
+        self._pub_marker.publish(m)
+        self.__pending_markers = []
 
     def publishTextMarker(self, text, i, r=1, g=0, b=0, a=1, namespace='default', frame_id='torso_base', T=None, height=0.1):
         m = MarkerArray()
@@ -72,8 +79,13 @@ class MarkerPublisher:
         self._pub_marker.publish(m)
         return i+1
 
-    def publishSinglePointMarker(self, pt, i, r=1, g=0, b=0, a=1, namespace='default', frame_id='torso_base', m_type=Marker.CUBE, scale=Vector3(0.005, 0.005, 0.005), T=None):
-        m = MarkerArray()
+    def publishSinglePointMarker(self, pt, i, r=1, g=0, b=0, a=1, namespace='default',
+            frame_id='torso_base', m_type=Marker.CUBE, scale=Vector3(0.005, 0.005, 0.005), T=None):
+        self.addSinglePointMarker(pt, i, r=r, g=g, b=b, a=a, namespace=namespace,
+                                                frame_id=frame_id, m_type=m_type, scale=scale, T=T)
+        self.publishAll()
+
+    def addSinglePointMarker(self, pt, i, r=1, g=0, b=0, a=1, namespace='default', frame_id='torso_base', m_type=Marker.CUBE, scale=Vector3(0.005, 0.005, 0.005), T=None):
         marker = Marker()
         marker.header.frame_id = frame_id
         marker.header.stamp = rospy.Time.now()
@@ -89,8 +101,7 @@ class MarkerPublisher:
             marker.pose = Pose( Point(pt.x(),pt.y(),pt.z()), Quaternion(0,0,0,1) )
         marker.scale = scale
         marker.color = ColorRGBA(r,g,b,a)
-        m.markers.append(marker)
-        self._pub_marker.publish(m)
+        self.__pending_markers.append( marker )
         return i+1
 
     def eraseMarkers(self, idx_from, idx_to, frame_id='torso_base', namespace='default'):
