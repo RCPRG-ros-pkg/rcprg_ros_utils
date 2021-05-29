@@ -81,9 +81,10 @@ class MarkerPublisher:
 
     def publishSinglePointMarker(self, pt, i, r=1, g=0, b=0, a=1, namespace='default',
             frame_id='torso_base', m_type=Marker.CUBE, scale=Vector3(0.005, 0.005, 0.005), T=None):
-        self.addSinglePointMarker(pt, i, r=r, g=g, b=b, a=a, namespace=namespace,
+        m_id = self.addSinglePointMarker(pt, i, r=r, g=g, b=b, a=a, namespace=namespace,
                                                 frame_id=frame_id, m_type=m_type, scale=scale, T=T)
         self.publishAll()
+        return m_id
 
     def addSinglePointMarker(self, pt, i, r=1, g=0, b=0, a=1, namespace='default', frame_id='torso_base', m_type=Marker.CUBE, scale=Vector3(0.005, 0.005, 0.005), T=None):
         marker = Marker()
