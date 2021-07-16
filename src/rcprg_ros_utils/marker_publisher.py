@@ -264,7 +264,7 @@ class MarkerPublisher:
         return base_id + 1
 
     def publishVectorMarker(self, v1, v2, i, r, g, b, a=0.5, frame='torso_base', namespace='default', scale=0.001):
-        m_id = self.addVectorMarker(v1, v2, i, r=r, g=g, b=b, a=a, frame_id=frame, namespace=namespace, scale=scale)
+        m_id = self.addVectorMarker(v1, v2, i, r=r, g=g, b=b, a=a, frame=frame, namespace=namespace, scale=scale)
         self.publishAll()
         return m_id
 
