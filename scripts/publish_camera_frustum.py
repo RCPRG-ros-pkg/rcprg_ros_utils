@@ -2,8 +2,7 @@
 
 ## Publishes marker: camera frustum.
 # @ingroup utilities
-# @file publish_camera_frustum
-# @namespace scripts.publish_camera_frustum Publishes marker: camera frustum
+# @file publish_camera_frustum.py
 
 # Copyright (c) 2017, Robot Control and Pattern Recognition Group,
 # Institute of Control and Computation Engineering

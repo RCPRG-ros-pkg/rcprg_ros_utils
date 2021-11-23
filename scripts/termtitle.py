@@ -1,8 +1,9 @@
 #!/usr/bin/env python
 
-## This node simulates perception of simulated Velma robot.
+## This script changes title of its terminal.
+# @file termtitle.py
 
-# Copyright (c) 2017, Robot Control and Pattern Recognition Group,
+# Copyright (c) 2021, Robot Control and Pattern Recognition Group,
 # Institute of Control and Computation Engineering
 # Warsaw University of Technology
 #

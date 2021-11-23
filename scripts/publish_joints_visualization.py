@@ -2,8 +2,7 @@
 
 ## Publishes marker: joints visualization
 # @ingroup utilities
-# @file publish_joints_visualization
-# @namespace scripts.publish_joints_visualization Publishes marker: camera frustum
+# @file publish_joints_visualization.py
 
 # Copyright (c) 2017, Robot Control and Pattern Recognition Group,
 # Institute of Control and Computation Engineering

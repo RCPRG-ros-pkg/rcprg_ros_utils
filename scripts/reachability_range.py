@@ -1,9 +1,8 @@
 #!/usr/bin/env python
 
-## Publishes marker: camera frustum.
+## Publishes marker: range of arm.
 # @ingroup utilities
-# @file publish_camera_frustum.py
-# @namespace scripts.publish_camera_frustum Publishes marker: camera frustum
+# @file reachability_range.py
 
 # Copyright (c) 2017, Robot Control and Pattern Recognition Group,
 # Institute of Control and Computation Engineering

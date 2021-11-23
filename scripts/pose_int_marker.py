@@ -2,8 +2,7 @@
 
 ## Provides interactive 6D pose marker and publishes its tf.
 # @ingroup utilities
-# @file pose_int_marker
-# @namespace scripts.pose_int_marker Provides interactive 6D pose marker and publishes its tf
+# @file pose_int_marker.py
 
 # Copyright (c) 2017, Robot Control and Pattern Recognition Group,
 # Institute of Control and Computation Engineering
