@@ -285,14 +285,7 @@ class MarkerPublisher:
         return i+1
 
     def publishFrameMarker(self, T, base_id, scale=0.1, frame='torso_base', namespace='default'):
-        self.publishVectorMarker(T*PyKDL.Vector(), T*PyKDL.Vector(scale,0,0), base_id, 1, 0, 0, 1, frame, namespace, scale*0.1)
-        self.publishVectorMarker(T*PyKDL.Vector(), T*PyKDL.Vector(0,scale,0), base_id+1, 0, 1, 0, 1, frame, namespace, scale*0.1)
-        self.publishVectorMarker(T*PyKDL.Vector(), T*PyKDL.Vector(0,0,scale), base_id+2, 0, 0, 1, 1, frame, namespace, scale*0.1)
-        return base_id+3
-
-
-    def publishFrameMarker(self, T, base_id, scale=0.1, frame='torso_base', namespace='default'):
-        m_id = self.addFrameMarker(T, base_id, scale=scale, frame_id=frame, namespace=namespace)
+        m_id = self.addFrameMarker(T, base_id, scale=scale, frame=frame, namespace=namespace)
         self.publishAll()
         return m_id
 
