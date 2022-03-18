@@ -57,6 +57,9 @@ class MarkerPublisher:
         self._pub_marker.publish(m)
         self.__pending_markers = []
 
+    def getPendingMarkersCount(self):
+        return len(self.__pending_markers)
+
     def publishTextMarker(self, text, i, r=1, g=0, b=0, a=1, namespace='default', frame_id='torso_base', T=None, height=0.1):
         m = MarkerArray()
         marker = Marker()
