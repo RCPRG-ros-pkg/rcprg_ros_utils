@@ -210,7 +210,9 @@ class MarkerPublisher:
         elif m_type == Marker.SPHERE:
             marker.type = Marker.SPHERE_LIST
         marker.action = Marker.ADD
-        if T != None:
+        if T is None:
+            marker.pose = Pose( Point(0, 0, 0), Quaternion(0, 0, 0, 1) )
+        else:
             qx, qy, qz, qw = T.M.GetQuaternion()
             marker.pose = Pose( Point(T.p.x(),T.p.y(),T.p.z()), Quaternion(qx,qy,qz,qw) )
         marker.scale = scale
