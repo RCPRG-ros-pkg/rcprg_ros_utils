@@ -89,7 +89,8 @@ class MarkerPublisher:
         self.publishAll()
         return m_id
 
-    def addSinglePointMarker(self, pt, i, r=1, g=0, b=0, a=1, namespace='default', frame_id='torso_base', m_type=Marker.CUBE, scale=Vector3(0.005, 0.005, 0.005), T=None):
+    @staticmethod
+    def createSinglePointMarker(pt, i, r=1, g=0, b=0, a=1, namespace='default', frame_id='torso_base', m_type=Marker.CUBE, scale=Vector3(0.005, 0.005, 0.005), T=None):
         marker = Marker()
         marker.header.frame_id = frame_id
         marker.header.stamp = rospy.Time.now()
@@ -105,7 +106,27 @@ class MarkerPublisher:
             marker.pose = Pose( Point(pt.x(),pt.y(),pt.z()), Quaternion(0,0,0,1) )
         marker.scale = scale
         marker.color = ColorRGBA(r,g,b,a)
-        self.__pending_markers.append( marker )
+        return marker
+
+    def addSinglePointMarker(self, pt, i, r=1, g=0, b=0, a=1, namespace='default', frame_id='torso_base', m_type=Marker.CUBE, scale=Vector3(0.005, 0.005, 0.005), T=None):
+        # marker = Marker()
+        # marker.header.frame_id = frame_id
+        # marker.header.stamp = rospy.Time.now()
+        # marker.ns = namespace
+        # marker.id = i
+        # marker.type = m_type
+        # marker.action = Marker.ADD
+        # if T != None:
+        #     point = T*pt
+        #     q = T.M.GetQuaternion()
+        #     marker.pose = Pose( Point(point.x(),point.y(),point.z()), Quaternion(q[0],q[1],q[2],q[3]) )
+        # else:
+        #     marker.pose = Pose( Point(pt.x(),pt.y(),pt.z()), Quaternion(0,0,0,1) )
+        # marker.scale = scale
+        # marker.color = ColorRGBA(r,g,b,a)
+        self.__pending_markers.append( 
+            MarkerPublisher.createSinglePointMarker(
+                                    pt, i, r, g, b, a, namespace, frame_id, m_type, scale, T) )
         return i+1
 
     def eraseMarkers(self, idx_from, idx_to, frame_id='torso_base', namespace='default'):
@@ -274,6 +295,23 @@ class MarkerPublisher:
         return m_id
 
     def addVectorMarker(self, v1, v2, i, r, g, b, a=0.5, frame='torso_base', namespace='default', scale=0.001):
+        # marker = Marker()
+        # marker.header.frame_id = frame
+        # marker.header.stamp = rospy.Time.now()
+        # marker.ns = namespace
+        # marker.id = i
+        # marker.type = Marker.ARROW
+        # marker.action = Marker.ADD
+        # marker.points.append(Point(v1.x(), v1.y(), v1.z()))
+        # marker.points.append(Point(v2.x(), v2.y(), v2.z()))
+        # marker.pose = Pose( Point(0,0,0), Quaternion(0,0,0,1) )
+        # marker.scale = Vector3(scale, 2.0*scale, 0)
+        # marker.color = ColorRGBA(r,g,b,a)
+        self.__pending_markers.append( MarkerPublisher.createVectorMarker(v1, v2, i, r, g, b, a, frame, namespace, scale) )
+        return i+1
+
+    @staticmethod
+    def createVectorMarker(v1, v2, i, r, g, b, a=0.5, frame='torso_base', namespace='default', scale=0.001):
         marker = Marker()
         marker.header.frame_id = frame
         marker.header.stamp = rospy.Time.now()
@@ -286,8 +324,7 @@ class MarkerPublisher:
         marker.pose = Pose( Point(0,0,0), Quaternion(0,0,0,1) )
         marker.scale = Vector3(scale, 2.0*scale, 0)
         marker.color = ColorRGBA(r,g,b,a)
-        self.__pending_markers.append( marker )
-        return i+1
+        return marker
 
     def publishFrameMarker(self, T, base_id, scale=0.1, frame='torso_base', namespace='default'):
         m_id = self.addFrameMarker(T, base_id, scale=scale, frame=frame, namespace=namespace)
@@ -299,6 +336,13 @@ class MarkerPublisher:
         self.addVectorMarker(T*PyKDL.Vector(), T*PyKDL.Vector(0,scale,0), base_id+1, 0, 1, 0, 1, frame, namespace, scale*0.1)
         self.addVectorMarker(T*PyKDL.Vector(), T*PyKDL.Vector(0,0,scale), base_id+2, 0, 0, 1, 1, frame, namespace, scale*0.1)
         return base_id+3
+
+    @staticmethod
+    def createFrameMarker(T, base_id, scale=0.1, frame='torso_base', namespace='default'):
+        m1 = MarkerPublisher.createVectorMarker(T*PyKDL.Vector(), T*PyKDL.Vector(scale,0,0), base_id, 1, 0, 0, 1, frame, namespace, scale*0.1)
+        m2 = MarkerPublisher.createVectorMarker(T*PyKDL.Vector(), T*PyKDL.Vector(0,scale,0), base_id+1, 0, 1, 0, 1, frame, namespace, scale*0.1)
+        m3 = MarkerPublisher.createVectorMarker(T*PyKDL.Vector(), T*PyKDL.Vector(0,0,scale), base_id+2, 0, 0, 1, 1, frame, namespace, scale*0.1)
+        return [m1, m2, m3]
 
     def publishConstantMeshMarker(self, uri, base_id, r=1, g=0, b=0, scale=0.1, frame_id='torso_base', namespace='default', T=None):
         if T == None:
