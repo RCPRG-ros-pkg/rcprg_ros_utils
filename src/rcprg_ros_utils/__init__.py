@@ -1,6 +1,6 @@
 ## @package rcprg_ros_utils Package for various ROS utilities.
 
-from geometry import *
-from marker_publisher import *
-from scripting import *
+from rcprg_ros_utils.geometry import *
+from rcprg_ros_utils.marker_publisher import *
+from rcprg_ros_utils.scripting import *
 
